@@ -18,14 +18,50 @@ running it prints `All checks passed!`. Open a pull request that says
 
 ## What you need
 
-Python 3. That is the entire list.
+Three things, and you may already have all three.
+
+| Thing | How to check |
+|---|---|
+| **A GitHub account** | Sign in at [github.com](https://github.com). [Sign up](https://github.com/signup) — free, two minutes. |
+| **Git on your laptop** | Run `git --version`. If it prints a number, you have it. |
+| **Python 3** | Run `python3 --version`. If it prints a number, you are ready. |
+
+If `git --version` says "command not found", install it from
+[git-scm.com/downloads](https://git-scm.com/downloads). On a Mac, running
+`git --version` may offer to install it for you — say yes.
+
+No `pip install`, no virtual environment, no editor requirements.
+
+**First time using Git on this machine?** Run these two lines once, with your
+own details:
 
 ```bash
-python3 --version
+git config --global user.name "Your Name"
+git config --global user.email "you@example.com"
 ```
 
-No `pip install`, no virtual environment, no editor requirements. If that command
-prints a version number, you are ready.
+Skip them and Git stops you at your first commit with `Please tell me who you are`.
+
+---
+
+## The whole thing, in eight steps
+
+```
+1. Pick an issue    ->  comment /claim
+2. Fork             ->  your own copy on GitHub
+3. Clone            ->  download it to your laptop
+4. Branch           ->  git checkout -b fix/issue-42
+5. Fix one file     ->  until it prints All checks passed!
+6. Commit           ->  save the change with a message
+7. Push             ->  send it back to GitHub
+8. Pull request     ->  ask us to merge it
+```
+
+Everything below is those eight steps, slowly. Most people finish their first
+one in under twenty minutes.
+
+**You cannot break anything.** You work on your own copy, on a branch, and a
+human reads your change before it goes anywhere near this repository.
 
 ---
 
@@ -42,20 +78,44 @@ take it — no hard feelings, just come back and claim another.
 
 If an issue is already assigned, pick a different one. There are ninety.
 
-### 2. Fork and clone
+### 2. Fork it
 
-Click **Fork** at the top of this page, then:
+**Fork** means "make my own copy of this project". Click **Fork** at the top
+right of this page, then **Create fork**.
+
+You now have your own copy at `github.com/YOUR-USERNAME/Demo-Repository-1`. You
+can do anything you like to it. **You cannot break the original.**
+
+### 3. Clone your fork
+
+**Clone** means "download my copy so I can open the files".
+
+First check you are on **your fork** — the URL must show *your* username, not
+`github-community-gitam`. Then click the green **`< > Code`** button, copy the
+HTTPS link, and:
 
 ```bash
-git clone https://github.com/<your-username>/Repository-1.git
+git clone https://github.com/YOUR-USERNAME/Demo-Repository-1.git
 cd Demo-Repository-1
+
+# point at the original, so you can pull in other people's merged work later
+git remote add upstream https://github.com/github-community-gitam/Demo-Repository-1.git
+
+# verify: origin must be YOUR username, upstream must be the org
+git remote -v
 ```
 
-### 3. Make a branch
+> **The single most common mistake.** Cloning the original instead of your fork.
+> Everything works until you push, which then fails with **permission denied**.
+> `git remote -v` catches it in two seconds.
+
+### 4. Make a branch
 
 Never work on `main`. Name the branch after your issue:
 
 ```bash
+git switch main
+git pull upstream main          # start from the latest version
 git checkout -b fix/issue-42
 ```
 
@@ -65,7 +125,7 @@ git checkout -b fix/issue-42
 | `docs/` | README, CONTRIBUTING, comments |
 | `ci/` | Workflows |
 
-### 4. Fix the file
+### 5. Fix the file
 
 Open the one file your issue names. Run it first, so you can see what failing
 looks like:
@@ -90,7 +150,7 @@ Three rules, and they matter:
 - **Do not delete the `# TODO:` comments** unless the thing they describe is
   genuinely done. If you fixed it, removing the comment is correct and welcome.
 
-### 5. Check it
+### 6. Check it
 
 ```bash
 python3 python-open-source-challenge/issue-42.py
@@ -104,7 +164,7 @@ All checks passed!
 
 Nothing else counts as done.
 
-### 6. Commit
+### 7. Commit
 
 ```bash
 git add python-open-source-challenge/issue-42.py
@@ -114,14 +174,16 @@ git commit -m "fix: correct the department average calculation in issue 42"
 Write commit messages as `<type>: <what changed>`. Use `fix`, `docs`, `test`,
 `ci`, `refactor` or `chore`.
 
-### 7. Push and open a pull request
+### 8. Push and open a pull request
 
 ```bash
 git push -u origin fix/issue-42
 ```
 
-GitHub will offer you a **Compare & pull request** button. Fill in the template
-and make sure the description contains:
+GitHub then shows a yellow banner on your fork with a **Compare & pull request**
+button. Click it, fill in the template, and click **Create pull request**.
+
+Make sure the description contains:
 
 ```
 Closes #42
@@ -131,7 +193,11 @@ That line is what links your work to the issue and closes it automatically when
 you are merged. Without it a maintainer has to close the issue by hand, which is
 how issues get forgotten.
 
-### 8. Review
+> If `git push` fails with **permission denied** or **repository not found**, you
+> cloned the original instead of your fork. Run `git remote -v` and check whose
+> username is there.
+
+### 9. Review
 
 A maintainer will read it. They may ask for changes — that is normal and is not a
 criticism. Push more commits to the same branch and the pull request updates
@@ -146,6 +212,10 @@ and requires each to print `All checks passed!`.
 
 It deliberately does not run the other eighty-nine. Those are still broken, by
 design, and they are not your problem.
+
+**A red X is not a rejection.** It is information. Click **Details** next to the
+red check and read the log. To fix it: change the file, commit, and push to the
+**same branch** — the pull request updates itself. You do not open a new one.
 
 If the check goes red, open the log. It prints the same error you would see on
 your own machine, and the failing `assert` names the exact input and expected
@@ -195,6 +265,69 @@ another issue and have another go.
   actually does versus what you assumed.
 - **Still stuck?** Comment on your issue and say what you have tried. Asking is
   not failing — a good question is itself a contribution.
+- **Come to a PR Debug Clinic** (Oct 12, Oct 21). Bring your laptop and your
+  broken branch — that is the entire point of the session.
+
+### When Git throws something at you
+
+Nine times out of ten it is one of these:
+
+| What you see | What it means |
+|---|---|
+| `permission denied` on push | You cloned the original, not your fork. Check `git remote -v` |
+| `fatal: not a git repository` | You are in the wrong folder. `cd` into the project |
+| `Please tell me who you are` | First time using Git. Run the two `git config` lines it prints |
+| `Everything up-to-date` but nothing on GitHub | You never committed. Run `git status` |
+| `error: failed to push some refs` | Someone changed `main`. `git pull upstream main`, then push again |
+| Checks are red on your PR | Click **Details**. It names the file and the line |
+| `merge conflict` | Two people edited the same lines. Ask — this one is worth a human |
+
+### Command cheat sheet
+
+```bash
+# 1. clone YOUR fork
+git clone https://github.com/YOUR-USERNAME/Demo-Repository-1.git
+cd Demo-Repository-1
+
+# 2. branch
+git checkout -b fix/issue-12
+
+# 3. ... make your change in an editor ...
+
+# 4. see what you changed
+git status
+git diff
+
+# 5. check it works
+python3 python-open-source-challenge/issue-42.py
+
+# 6. commit
+git add .
+git commit -m "fix: short description of what changed"
+
+# 7. push
+git push -u origin fix/issue-12
+
+# then open the pull request, with "Closes #12" in the description
+```
+
+Useful when you need to undo something:
+
+```bash
+git log --oneline -5             # what did I commit?
+git pull upstream main           # get the latest changes
+git restore <file>               # throw away uncommitted changes to a file
+git switch main                  # go back to the main branch
+```
+
+### Where to look things up
+
+| I want to... | Go to |
+|---|---|
+| Understand a word like "upstream" | [Glossary](https://github-community-gitam.github.io/open-source-launchpad/glossary.html) |
+| Check a question others have asked | [FAQ](https://github-community-gitam.github.io/open-source-launchpad/faq.html) |
+| Walk through Git again, slowly | [Git basics](https://github-community-gitam.github.io/open-source-launchpad/git-basics.html) |
+| Check my PR before I open it | [PR checklist](https://github-community-gitam.github.io/open-source-launchpad/pr-checklist.html) |
 
 ---
 
